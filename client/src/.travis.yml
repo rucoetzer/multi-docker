@@ -1,0 +1,21 @@
+language: generic
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t rucoetzer/react-test -f ./client/Dockerfile.dev .
+script:
+  - docker run -e CI=true rucoetzer/react-test npm test
+
+after_success:
+  - docker build -t rucoetzer/multi-client ./client
+  - docker build -t rucoetzer/multi-server ./server
+  - docker build -t rucoetzer/multi-nginx ./nginx
+  - docker build -t rucoetzer/multi-worker ./worker
+
+# Log into docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+  - docker push rucoetzer/multi-client
+  - docker push rucoetzer/multi-server
+  - docker push rucoetzer/multi-nginx
+  - docker push rucoetzer/multi-worker
