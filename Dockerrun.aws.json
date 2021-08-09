@@ -1,0 +1,39 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "rucoetzer/multi-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "server",
+      "image": "rucoetzer/multi-server",
+      "hostname": "api",
+      "eseential": false
+    },
+    {
+      "name": "worker",
+      "image": "rucoetzer/multi-worker",
+      "hostname": "worker",
+      "eseential": false
+    },
+    {
+      "name": "nginx",
+      "image": "rucoetzer/multi-nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": [
+        "client",
+        "server"
+      ]
+    }
+  ]
+}
